@@ -721,42 +721,83 @@ int get_player_position(t_map *map)
 //     }
 // }
 
-void draw_map(t_win *win ,t_map *map)
-{
-	(void)win;
-	int i =0;
-	char *all_map  = ft_strdup("");
+// void raycast_and_draw(t_win *win)
+// {
 
-	while (map->map[i] != NULL)
-	{
-		all_map = ft_strjoin(all_map, map->map[i]);
-		all_map = ft_strjoin(all_map, "\n");
-		i++;
-	}
-	 printf("%s\n", all_map);
-	// int x = -1;
-	// int y = -1;
+// }
 
-	// while(++x < HEIGHT)
-	// {
-	// 	y = -1;
-	// 	while(++y < WIDTH)
-	// 	{
-	// 		draw_walls();
-	// 		draw_player();
-			
-	// 	}
-	// }
+// void draw_map(t_win *win ,t_map *map)
+// {
+// 	(void)win;
+// 	int i =0;
 
 	
-}
 
+// 	// int x = -1;
+// 	// int y = -1;
+
+// 	// while(++x < HEIGHT)
+// 	// {
+// 	// 	y = -1;
+// 	// 	while(++y < WIDTH)
+// 	// 	{
+// 	// 		draw_walls();
+// 	// 		draw_player();
+			
+// 	// 	}
+// 	// }
+
+	
+// }
+void keyboard_hooks(void *param)
+{
+	t_win *win;
+	win = (t_win *)param;
+	if(mlx_is_key_down(win->mlx, KEY_ESC))
+		exit(0);
+}
+void draw_map(t_win *win, t_map *map)
+{
+	(void)win;
+	uint32_t x = -1;
+	uint32_t y = -1;
+	char **map_tmp ;
+	map_tmp = map->map;
+	while(++x < HEIGHT)
+	{
+		y = -1;
+		while(++y < WIDTH)
+		{
+			int x1 = x / 64;
+			int y1 = y / 64;
+
+			while(map_tmp[x1][y1] == ' ')
+				y1++;
+			if(map_tmp[x1][y1] == '1')
+				mlx_put_pixel(win->img, y, x, 0x00FFFFFF0);
+			else if(map_tmp[x1][y1] == '0')
+				mlx_put_pixel(win->img, y, x, 0x00DD0000);
+			else if(map_tmp[x1][y1] == '2')
+				mlx_put_pixel(win->img, y, x, 0x00DFF00);
+			else if(map_tmp[x1][y1] == 'N')
+				mlx_put_pixel(win->img, y, x, 0x000000FF);
+			else if(map_tmp[x1][y1] == 'S')
+				mlx_put_pixel(win->img, y, x, 0x00FFFF00);
+			else if(map_tmp[x1][y1] == 'W')
+				mlx_put_pixel(win->img, y, x, 0x00FF00FF);
+		
+			else if(map_tmp[x1][y1] == 'E')
+				mlx_put_pixel(win->img, y, x, 0x00FF00FF);
+		
+		}
+	}
+}
 int main(int ac, char **av) 
 {
 	int fd;
 	t_map *map;
 	map = NULL;
-	atexit(f);
+	// atexit(f);
 
 	if (ac != 2 || check_file(av[1]) == 0) 
 	{
@@ -770,8 +811,8 @@ int main(int ac, char **av)
 	map->we = NULL;
 	map->ea = NULL;
 	map->map = NULL;
-	map->map_width = 0;
-	map->map_height = 0;
+	map->map_width = 64;
+	map->map_height = 64;
 	map->floor.r = 0;
 	map->floor.g = 0;
 	map->floor.b = 0;
@@ -856,11 +897,11 @@ int main(int ac, char **av)
 	// }
 	// ft_free_map(&map);
 	t_win win;
-	win.mlx = mlx_init(WIDTH, HEIGHT, "cub3D",true);
+	win.mlx = mlx_init(WIDTH, HEIGHT, "cub3D",false);
 	win.img = mlx_new_image(win.mlx, WIDTH, HEIGHT);
-
-	draw_map(&win, map);
+	draw_map(&win,map);
 	mlx_image_to_window(win.mlx, win.img, 0, 0);
+	mlx_loop_hook(win.mlx, keyboard_hooks, &win);
 	mlx_loop(win.mlx);
 	close(fd);
 

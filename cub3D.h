@@ -6,7 +6,7 @@
 /*   By: heddahbi <heddahbi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 03:26:59 by abel-hid          #+#    #+#             */
-/*   Updated: 2023/11/17 17:35:29 by heddahbi         ###   ########.fr       */
+/*   Updated: 2023/11/18 12:35:03 by heddahbi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 #endif
 #define HEIGHT 720
 #define WIDTH 1080
+#define KEY_ESC 256
 typedef struct	s_player
 {
     int	x;
