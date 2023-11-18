@@ -755,6 +755,14 @@ void keyboard_hooks(void *param)
 	win = (t_win *)param;
 	if(mlx_is_key_down(win->mlx, KEY_ESC))
 		exit(0);
+	if(mlx_is_key_down(win->mlx, KEY_W))
+	{
+		mlx_delete_image(win->mlx, win->img);
+		win->img = mlx_new_image(win->mlx, WIDTH, HEIGHT);
+		draw_map(win, NULL);
+		mlx_put_pixel(win->img, 100, 100, 0x00FFFFFF);
+		mlx_image_to_window(win->mlx, win->img, 0, 0);
+	}
 }
 void draw_map(t_win *win, t_map *map)
 {
@@ -785,7 +793,6 @@ void draw_map(t_win *win, t_map *map)
 				mlx_put_pixel(win->img, y, x, 0x00FFFF00);
 			else if(map_tmp[x1][y1] == 'W')
 				mlx_put_pixel(win->img, y, x, 0x00FF00FF);
-		
 			else if(map_tmp[x1][y1] == 'E')
 				mlx_put_pixel(win->img, y, x, 0x00FF00FF);
 		
